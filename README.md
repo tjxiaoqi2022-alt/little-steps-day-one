@@ -1,44 +1,48 @@
-# Little Steps — Day 1
+# Little Steps
 
-面向六岁儿童的英语互动课件。React + Vite，纯静态前端，无后端、登录或用户数据收集。
+面向六岁英语初学者的连续互动课程。React + Vite，纯静态前端，无后端、登录或儿童数据收集。
 
 ## 本地运行
 
-需要 Node.js 20.19+ 或 22.12+、pnpm 10（也可以使用 npm）。
+需要 Node.js 20.19+ 或 22.12+、pnpm 10。
 
 ```sh
 pnpm install
 pnpm dev
-```
-
-打开终端显示的 Local 地址。手机与电脑连接同一 Wi-Fi，打开 Network 地址；需允许开发服务器通过本机防火墙。
-
-```sh
 pnpm test
 pnpm build
-pnpm preview
 ```
 
-`dist/` 可放到任何静态网站托管服务。不要直接双击 index.html，请通过 HTTP 打开。仓库已包含 GitHub Pages 自动发布流程；推送到 `main` 后会测试、构建并发布。
+仓库包含 GitHub Pages 自动发布流程。推送到 `main` 后会先测试和构建，再发布公开网站。网站根目录显示 Lessons 首页；课程使用 query 参数打开，例如 `?day=day-1` 和 `?day=day-2`，因此刷新课程页面不会白屏。
 
-## 课程与程序分离
+## 课程架构
 
-- `src/content/day1.js`：指令、图片、音频、题目顺序、字母、小游戏序列与故事。
-- `src/content/index.js`：课程注册。新建 day2.js、按同一格式填写数据后导入 courses，使用 `?day=day-2` 打开。五环节程序不需要改写。
-- `src/activities.jsx`：五个可复用环节。
-- `src/audio.js`：单通道音频播放、切页停止、错误反馈，快速重复点击不会叠音。
-- `src/lesson.js`：三选一选项生成。
-- `public/images/`、`public/audio/`：可替换的本地素材。
+- `src/content/library.js`：跨课程复用的动作和自然拼读素材。
+- `src/content/day1.js`、`day2.js`：每一天的目标、环节、顺序、故事与完成奖励。
+- `src/content/index.js`：按顺序注册课程并自动计算下一课。
+- `src/activities.jsx`：由课程数据驱动的通用活动组件。
+- `src/progress.js`：使用 `little-steps-progress-v1` 保存完成课程、最近课程和预留的家长解锁状态。
+- `src/audio.js`：单音频通道；重复点击或切页会停止前一个声音，避免叠音。
+- `public/images/`、`public/audio/`：可直接替换的本地素材。
 
-图片暂用一张 2 列 3 行图集，`frame` 指定 CSS background-position。替换为独立图片时改 `image` 并删除 `frame` 即可。音频只需替换 `audio` 路径。S 使用 /s/，A 使用短音 /æ/；不能替换为字母名称 /ɛs/、/eɪ/。正式教学前建议由英语教师审听并换成统一真人录音。音素来源与许可在 `public/credits.html`。
+新增 Day 3 时，复制一份课程数据文件，填写 `commands`、`phonics` 和可选的 `sections`（例如 `review`、`watch`、`quiz`、`phonics`、`blending`、`story`），再在 `src/content/index.js` 注册。无需复制 App 或重写课程引擎。
 
-流程：欢迎 → Watch（五个指令）→ Listen（五题）→ Phonics（探索两音与四题辨认）→ Play（依次听音选 S、A）→ Story（三页）→ 完成。仅在听完当前声音后解锁听辨选项；答错自动重播，不扣分、不计时。故事可朗读，不要求孩子独立阅读。Play 只把两个音并列，不将 SA 宣称为英语单词。
+## 当前课程
 
-所有课程 UI 为英文。进度只在当前页面内存中，刷新重置；不申请麦克风权限，不自动播放、不收集儿童声音。图片和课程音频均本地存放。字体为 Google Fonts，有系统字体后备。
+- Day 1：Stand up、Sit down、Look；`s`、`a`；没有 blending。
+- Day 2：复习 Day 1，新增 Come here、Listen、`t`，首次拼读 `at`、`sat`。
 
-## 边界
+课程 UI 只使用教学所需英语，不讲语法术语，不要求书写或录音。答错会重放原声音，不扣分、不计时。自然拼读 `/s/`、`/æ/`、`/t/` 使用独立录音，不使用浏览器 TTS。
 
-- MVP 未实现录音评分、教师后台、账号或云端学习记录。
-- 真实 iOS/Android 设备上的扬声器播放仍建议家长试听；本地浏览器的布局与完整流程可用于预验收。
-- 可选 WebMCP 仅注册只读 `read_lesson_progress`，不支持的浏览器忽略它。
-- 部署平台的访问策略与课件独立；源码自身不包含登录。默认私密预览可能要求所有者登录平台。
+## 待替换素材
+
+当前动作与故事沿用同一只小鸡图集，并用场景色保持故事连续。正式版本建议补充：Day 2 欢迎场景、Day 1 三幅连续故事图、Day 2 四幅连续故事图，以及更清晰的 Come here / Listen 双角色动作图。
+
+以下是占位语音，正式教学前建议由同一位英语教师录制并审听后按原文件名替换：
+
+- `public/audio/day2-hello.wav`
+- `public/audio/at.wav`
+- `public/audio/sat.wav`
+- 现有五个动作句和反馈语音
+
+音素来源和许可见 `public/credits.html`。

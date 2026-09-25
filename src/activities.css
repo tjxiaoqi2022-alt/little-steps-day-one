@@ -19,3 +19,13 @@
 .trophy{animation:reward-pop .55s cubic-bezier(.2,.9,.25,1.35)}
 @keyframes reward-pop{from{opacity:0;transform:rotate(-18deg) scale(.5)}to{opacity:1;transform:rotate(-7deg) scale(1)}}
 @media(max-width:700px){.journey{gap:5px;padding:3px 0;margin:20px auto 15px}.journey .step{height:12px;min-height:12px;border-radius:15px}.feedback.correct,.feedback.retry{min-height:58px;margin:14px auto 2px;font-size:18px}}
+
+/* Keep the written letter and its spoken phoneme visually distinct. */
+.phonics-kind{font-size:12px;font-weight:900;letter-spacing:2px;opacity:.72}
+.phoneme{margin-top:7px;font:800 15px/1.2 Nunito,sans-serif;letter-spacing:1px}
+.phoneme strong{font:700 28px/1 "Segoe UI",Arial,sans-serif;letter-spacing:0;margin-left:6px}
+.explore .letter-sound{margin-top:16px}
+.sound-reward>span{display:flex;flex-direction:column;align-items:center;line-height:1}
+.sound-reward small{font:800 17px/1.2 "Segoe UI",Arial,sans-serif;margin-top:5px}
+.sound-reward>svg{flex:0 0 auto}
+.art.hello-art{width:min(440px,90vw)}

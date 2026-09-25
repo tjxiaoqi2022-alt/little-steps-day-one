@@ -95,9 +95,9 @@ export function Phonics({ course, section, audio, onDone }) {
   const [practice, setPractice] = useState(false);
   const [heard, setHeard] = useState([]);
   const [active, setActive] = useState(null);
-  if (practice) return <Quiz course={course} section={{ kind: 'phonics', title: 'Which sound?', letters: section.letters, order: section.order }} audio={audio} onDone={onDone}/>;
+  if (practice) return <Quiz course={course} section={{ kind: 'phonics', title: 'Listen. Tap the letter.', letters: section.letters, order: section.order }} audio={audio} onDone={onDone}/>;
   return <><Heading title={section.title}/><div className={`choices letters explore count-${items.length}`}>{items.map(item => <button key={item.id} className={`choice ${item.color} ${active === item.id && audio.playing ? 'wiggle' : ''}`} aria-label={`Hear the sound for ${item.letter}`} onClick={async () => { setActive(item.id); if (await audio.play(item)) setHeard(previous => [...new Set([...previous, item.id])]); }}>
-    {section.focus === item.id && <span className="new-sound">NEW</span>}<span className="big-letter">{item.letter}</span><span className="letter-sound"><Volume2/>{heard.includes(item.id) ? <Check/> : 'Tap'}</span>
+    {section.focus === item.id && <span className="new-sound">NEW</span>}<span className="phonics-kind">LETTER</span><span className="big-letter">{item.letter}</span><span className="phoneme">SOUND <strong>{item.sound}</strong></span><span className="letter-sound"><Volume2/>{heard.includes(item.id) ? <Check/> : 'Tap to hear'}</span>
   </button>)}</div><div className="center-next"><Next disabled={heard.length < items.length} onClick={() => { audio.stop(); setPractice(true); }}>Let’s try!</Next></div></>;
 }
 
@@ -135,6 +135,7 @@ export function Activity(props) {
     case 'watch': return <Watch {...props}/>;
     case 'quiz': return <Quiz {...props}/>;
     case 'phonics': return <Phonics {...props}/>;
+    case 'play': return <Quiz {...props}/>;
     case 'blending': return <Blending {...props}/>;
     case 'story': return <Story {...props}/>;
     default: return null;

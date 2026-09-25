@@ -8,9 +8,8 @@ import { completeCourse, isCourseUnlocked, loadProgress, PROGRESS_KEY, saveProgr
 const assetPath = value => new URL(`../public${value}`, import.meta.url);
 
 test('course registry stays ordered and computes the next lesson', () => {
-  assert.deepEqual(courses.map(course => course.id), ['day-1', 'day-2']);
-  assert.equal(getNextCourse('day-1')?.id, 'day-2');
-  assert.equal(getNextCourse('day-2'), null);
+  assert.deepEqual(courses.map(course => course.id), ['day-1']);
+  assert.equal(getNextCourse('day-1'), null);
 });
 
 test('every course section references known content and bundled audio', () => {
@@ -35,11 +34,13 @@ test('every course section references known content and bundled audio', () => {
       if (section.audio) assert.ok(existsSync(assetPath(section.audio)), `Missing section audio ${section.audio}`);
     }
   }
-  assert.deepEqual(courses[0].commands.map(item => item.id), ['stand', 'sit', 'look']);
-  assert.deepEqual(courses[0].phonics.map(item => item.letter), ['s', 'a']);
+  assert.deepEqual(courses[0].commands.map(item => item.id), ['stand', 'sit', 'come', 'look', 'listen']);
+  assert.deepEqual(courses[0].phonics.map(({ letter, sound }) => ({ letter, sound })), [
+    { letter: 's', sound: '/s/' },
+    { letter: 'a', sound: '/æ/' },
+  ]);
+  assert.deepEqual(courses[0].sections.map(section => section.type), ['watch', 'quiz', 'phonics', 'play', 'story']);
   assert.ok(!courses[0].sections.some(section => section.type === 'blending'));
-  assert.deepEqual(courses[1].phonics.map(item => item.letter), ['s', 'a', 't']);
-  assert.ok(courses[1].sections.some(section => section.type === 'blending'));
 });
 
 test('command quizzes include the answer with unique choices', () => {
@@ -54,14 +55,12 @@ test('command quizzes include the answer with unique choices', () => {
   }
 });
 
-test('completion persists and unlocks the next course after refresh', () => {
+test('completion persists after refresh', () => {
   const values = new Map();
   const storage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value) };
   let progress = loadProgress(storage);
-  assert.equal(isCourseUnlocked(courses, 1, progress), false);
   progress = saveProgress(completeCourse(progress, 'day-1'), storage);
   assert.ok(values.has(PROGRESS_KEY));
   const refreshed = loadProgress(storage);
   assert.ok(refreshed.completedDays.includes('day-1'));
-  assert.equal(isCourseUnlocked(courses, 1, refreshed), true);
 });

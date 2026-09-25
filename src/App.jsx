@@ -6,7 +6,7 @@ import { useAudio } from './audio.js';
 import { Art, Next, Heading, Activity } from './activities.jsx';
 import { completeCourse, isCompleted, isCourseUnlocked, loadProgress, recommendedCourse, saveProgress } from './progress.js';
 
-const sectionIcons = { hello: Sparkles, review: RotateCcw, watch: Footprints, quiz: Ear, phonics: Music2, blending: Gamepad2, story: BookOpen };
+const sectionIcons = { hello: Sparkles, review: RotateCcw, watch: Footprints, quiz: Ear, phonics: Music2, play: Gamepad2, blending: Gamepad2, story: BookOpen };
 const routeId = () => new URLSearchParams(window.location.search).get('day');
 
 function LessonsHome({ progress, onSelect }) {
@@ -45,7 +45,7 @@ function Finish({ course, progress, onReplay, onLessons, onNext }) {
     <div className="trophy" aria-hidden="true"><Star fill="currentColor" size={66}/></div>
     <Heading title={course.completion.title}>Great job!</Heading>
     <div className="reward-row">
-      {course.completion.sounds.map(id => <span className="reward-chip sound-reward" key={id}>{course.phonics.find(item => item.id === id)?.letter}<Check/></span>)}
+      {course.completion.sounds.map(id => { const item = course.phonics.find(sound => sound.id === id); return <span className="reward-chip sound-reward" key={id}><span>{item?.letter}<small>{item?.sound}</small></span><Check/></span>; })}
       {course.completion.words?.map(word => <span className="reward-chip word-reward" key={word}>{word}<Star/></span>)}
     </div>
     <div className="command-summary">{commandNames.map(text => <span key={text}><Check size={18}/>{text}</span>)}</div>

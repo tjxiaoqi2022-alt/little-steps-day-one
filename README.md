@@ -13,7 +13,7 @@ pnpm test
 pnpm build
 ```
 
-仓库包含 GitHub Pages 自动发布流程。推送到 `main` 后会先测试和构建，再发布公开网站。网站根目录显示 Lessons 首页；课程使用 query 参数打开，例如 `?day=day-1` 和 `?day=day-2`，因此刷新课程页面不会白屏。
+仓库包含 GitHub Pages 自动发布流程。推送到 `main` 后会先测试和构建，再发布公开网站。网站根目录显示 Lessons 首页；Day 1 使用 query 参数 `?day=day-1` 打开，因此刷新课程页面不会白屏。
 
 ## 课程架构
 
@@ -29,8 +29,8 @@ pnpm build
 
 ## 当前课程
 
-- Day 1：Stand up、Sit down、Look；`s`、`a`；没有 blending。
-- Day 2：复习 Day 1，新增 Come here、Listen、`t`，首次拼读 `at`、`sat`。
+- Day 1：Stand up、Sit down、Come here、Look、Listen；字母 `s` 对应音素 `/s/`，字母 `a` 对应音素 `/æ/`；没有 blending。
+- Day 2 暂不进入公开课程路径，等 Day 1 审核确认后再继续开发。
 
 课程 UI 只使用教学所需英语，不讲语法术语，不要求书写或录音。答错会重放原声音，不扣分、不计时。自然拼读 `/s/`、`/æ/`、`/t/` 使用独立录音，不使用浏览器 TTS。
 

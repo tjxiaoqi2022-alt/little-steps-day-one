@@ -11,7 +11,7 @@ export const actions = {
 };
 
 export const phonics = {
-  s: { id: 's', letter: 's', sound: '/s/', audio: asset('audio/s.mp3'), color: 'blue' },
+  s: { id: 's', letter: 's', sound: '/s/', audio: asset('audio/s.wav'), color: 'blue' },
   a: { id: 'a', letter: 'a', sound: '/æ/', audio: asset('audio/a.mp3'), color: 'orange' },
   t: { id: 't', letter: 't', sound: '/t/', audio: asset('audio/t.mp3'), color: 'green' },
 };

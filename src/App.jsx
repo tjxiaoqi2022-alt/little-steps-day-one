@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Sparkles, Star, Check, Ear, BookOpen, Gamepad2, RotateCcw, Home, Music2, Footprints, LockKeyhole } from 'lucide-react';
+import { Sparkles, Star, Check, Ear, BookOpen, Gamepad2, RotateCcw, Home, Music2, Footprints, LockKeyhole, Trophy, Map } from 'lucide-react';
 import { courses, getCourse, getNextCourse } from './content/index.js';
 import { asset } from './asset.js';
 import { useAudio } from './audio.js';
@@ -11,19 +11,30 @@ const routeId = () => new URLSearchParams(window.location.search).get('day');
 
 function LessonsHome({ progress, onSelect }) {
   const recommended = recommendedCourse(courses, progress);
+  const completedCount = courses.filter(course => isCompleted(progress, course.id)).length;
   return <main className="lessons-home">
-    <div className="home-hero"><span className="eyebrow">LITTLE STEPS</span><h1>Choose a lesson</h1><p>One happy step at a time.</p></div>
-    <div className="lesson-grid">{courses.map((course, index) => {
-      const done = isCompleted(progress, course.id);
-      const unlocked = isCourseUnlocked(courses, index, progress);
-      const next = recommended?.id === course.id && !done;
-      return <button key={course.id} className={`lesson-card theme-${course.theme} ${done ? 'done' : ''}`} disabled={!unlocked} onClick={() => onSelect(course.id)}>
-        <span className="lesson-number">{done ? <Check/> : unlocked ? <Star/> : <LockKeyhole/>}</span>
-        <span className="lesson-day">Day {course.number}</span>
-        <span className="lesson-status">{done ? 'Complete!' : next ? 'Next lesson' : unlocked ? 'Ready' : 'Finish Day 1 first'}</span>
-      </button>;
-    })}</div>
-    <Art item={{ image: asset('images/actions.webp'), frame: '100% 100%', alt: 'A friendly chick waving' }} className="lessons-mascot"/>
+    <section className="path-hero">
+      <div><span className="eyebrow">YOUR ADVENTURE</span><h1>Little Steps</h1><p>Follow the path. Learn a little every day!</p></div>
+      <div className="path-stats" aria-label={`${completedCount} lessons complete`}><span><Trophy/> {completedCount}</span><span><Map/> {courses.length}</span></div>
+    </section>
+    <section className="learning-path" aria-label="Learning path">
+      <div className="path-line" aria-hidden="true"/>
+      {courses.map((course, index) => {
+        const done = isCompleted(progress, course.id);
+        const unlocked = isCourseUnlocked(courses, index, progress);
+        const next = recommended?.id === course.id && !done;
+        const status = done ? 'Complete!' : next ? 'Start here' : unlocked ? 'Ready' : `Finish Day ${index} first`;
+        return <div key={course.id} className={`path-stop path-offset-${index % 4} ${done ? 'done' : ''} ${next ? 'recommended' : ''} ${!unlocked ? 'locked' : ''}`}>
+          {next && <span className="start-bubble">START</span>}
+          <button className={`path-node theme-${course.theme}`} disabled={!unlocked} onClick={() => onSelect(course.id)} aria-label={`Day ${course.number}. ${status}`}>
+            {done ? <Check/> : unlocked ? <Star fill="currentColor"/> : <LockKeyhole/>}
+          </button>
+          <span className="path-label"><strong>Day {course.number}</strong><small>{status}</small></span>
+        </div>;
+      })}
+      <div className="path-stop path-offset-2 coming-soon" aria-label="More lessons coming soon"><span className="path-node"><Sparkles/></span><span className="path-label"><strong>More steps</strong><small>Coming soon!</small></span></div>
+      <Art item={{ image: asset('images/actions.webp'), frame: '100% 100%', alt: 'A friendly chick cheering beside the learning path' }} className="path-mascot"/>
+    </section>
   </main>;
 }
 
